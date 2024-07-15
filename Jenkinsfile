@@ -3,7 +3,7 @@ pipeline{
   agent any
   
   tools{
-      maven "MAVEN3"
+    maven "MAVEN3"
 	  jdk   "OracleJDK11"
    }
   
@@ -20,15 +20,47 @@ pipeline{
          sh 'mvn clean install -DskipTests'
       }
       post{
-	    success{
-		   echo 'Archiving artifact'
-		   archiveArtifacts artifacts: '**/*.jar'
-		}
-	  }
-    
+	      success{
+		     echo 'Archiving artifact'
+		    archiveArtifacts artifacts: '**/*.jar'
+		    }
+	    }
     }
     
- 
+    stage(' Code check '){
+      steps{
+        sh 'mvn  checkstyle:checkstyle'
+      }
+    post {
+        success {
+          echo 'Generated Analysis Result'
+                }
+      }
+    }
+
+    stage('CODE ANALYSIS with SONARQUBE') {
+          
+		  environment {
+             scannerHome = tool 'sonarscanner4'
+          }
+
+          steps {
+            withSonarQubeEnv('sonar') {
+               sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=AmazonService \
+                   -Dsonar.projectName=AmazonService \
+                   -Dsonar.projectVersion=1.0 \
+                   -Dsonar.sources=src/ \
+                   -Dsonar.java.binaries=target/ \
+                   -Dsonar.junit.reportsPath=target/surefire-reports/ \
+                   -Dsonar.jacoco.reportsPath=target/jacoco.exec \
+                   -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
+            }
+
+            timeout(time: 10, unit: 'MINUTES') {
+               waitForQualityGate abortPipeline: true
+            }
+          }
+        }
     
     }
   }
