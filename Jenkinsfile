@@ -49,8 +49,8 @@ pipeline{
                sh '''${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=AmazonService \
                    -Dsonar.projectName=AmazonService \
                    -Dsonar.projectVersion=1.0 \
-                   -Dsonar.sources=src/ \
-                   -Dsonar.java.binaries=target/ \
+                   -Dsonar.sources=src/main/java \
+                   -Dsonar.java.binaries=target/classes \
                    -Dsonar.java.checkstyle.reportPaths=target/checkstyle-result.xml'''
             }
 
