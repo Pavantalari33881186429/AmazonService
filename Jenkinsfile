@@ -5,6 +5,7 @@ pipeline{
   tools{
     maven "MAVEN3"
 	  jdk   "OracleJDK11"
+  
    }
 
    environment {
@@ -31,6 +32,11 @@ pipeline{
 		    archiveArtifacts artifacts: '**/*.jar'
 		    }
 	    }
+    }
+
+    stage('Initialize'){
+        def dockerHome = tool 'Docker'
+        env.PATH = "${dockerHome}/bin:${env.PATH}"
     }
 
     stage('Docker Build') {
