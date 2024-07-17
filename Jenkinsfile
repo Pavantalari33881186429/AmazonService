@@ -6,6 +6,12 @@ pipeline{
     maven "MAVEN3"
 	  jdk   "OracleJDK11"
    }
+
+   environment {
+        DOCKER_REGISTRY = 'vayuputra123/amazonservice'
+        DOCKER_IMAGE = 'AmazonService'
+        DOCKER_CREDENTIALS_ID = 'DockerHubCreds'
+    }
   
   stages{
     stage('Get code from Git'){
@@ -15,7 +21,7 @@ pipeline{
        }
     }
     
-    stage('Build Code'){
+    stage('Maven Build Code'){
       steps{
          sh 'mvn clean install -DskipTests'
       }
@@ -26,6 +32,15 @@ pipeline{
 		    }
 	    }
     }
+
+    stage('Docker Build') {
+            steps {
+                script {
+                    // Build Docker image
+                    docker.build("${DOCKER_IMAGE}:${env.BUILD_NUMBER}")
+                }
+            }
+        }
     
     stage(' Code check '){
       steps{
@@ -67,7 +82,18 @@ pipeline{
                 }
             }
         }
+
+        stage('Push to Docker Registry') {
+            steps {
+                script {
+                    docker.withRegistry("https://${DOCKER_REGISTRY}", "${DOCKER_CREDENTIALS_ID}") {
+                        docker.image("${DOCKER_IMAGE}:${env.BUILD_NUMBER}").push()
+                        docker.image("${DOCKER_IMAGE}:${env.BUILD_NUMBER}").push('latest')
+                    }
+                }
+            }
     
     }
   }
+}
 
