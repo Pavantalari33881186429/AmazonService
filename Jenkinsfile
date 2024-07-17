@@ -10,7 +10,7 @@ pipeline{
 
    environment {
         DOCKER_REGISTRY = 'vayuputra123/amazonservice'
-        DOCKER_IMAGE = 'AmazonService'
+        DOCKER_IMAGE = 'amazonService'
         DOCKER_CREDENTIALS_ID = 'DockerHubCreds'
     }
   
