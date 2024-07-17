@@ -9,7 +9,7 @@ pipeline{
    }
 
    environment {
-        DOCKER_REGISTRY = 'vayuputra123/amazonservice'
+        DOCKER_REGISTRY = 'hub.docker.com/repository/docker/vayuputra123/amazonservice'
         DOCKER_IMAGE = 'amazonservice'
         DOCKER_CREDENTIALS_ID = 'DockerHubCreds'
     }
