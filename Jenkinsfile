@@ -9,7 +9,7 @@ pipeline{
    }
 
    environment {
-        DOCKER_REGISTRY = 'hub.docker.com/repository/docker/vayuputra123/amazonservice'
+        DOCKER_REGISTRY = 'vayuputra123/amazonservice'
         DOCKER_IMAGE = 'amazonservice'
         DOCKER_CREDENTIALS_ID = 'DockerHubCreds'
     }
@@ -89,17 +89,20 @@ pipeline{
             }
         }
 
-        stage('Push to Docker Registry') {
+    stage('Push to Registry') {
             steps {
                 script {
-                    docker.withRegistry("https://${DOCKER_REGISTRY}", "${DOCKER_CREDENTIALS_ID}") {
-                        docker.image("${DOCKER_IMAGE}:${env.BUILD_NUMBER}").push()
-                        docker.image("${DOCKER_IMAGE}:${env.BUILD_NUMBER}").push('latest')
+                    withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh '''
+                        echo $DOCKER_PASSWORD | docker login $DOCKER_REGISTRY -u $DOCKER_USERNAME --password-stdin
+                        docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${env.BUILD_NUMBER}
+                        docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:latest
+                        '''
                     }
                 }
             }
-    
+        }
     }
   }
-}
+
 
