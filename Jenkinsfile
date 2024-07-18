@@ -42,7 +42,7 @@ pipeline{
             steps {
                 script {
                     // Build Docker image
-                    docker.build("${DOCKER_IMAGE}:${env.BUILD_NUMBER}")
+                    docker.build("${DOCKER_IMAGE}:V${env.BUILD_NUMBER}")
                 }
             }
         }
@@ -88,20 +88,30 @@ pipeline{
             }
         }
 
-    stage('Push to Docker Hub') {
+    stage('Docker Login') {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh '''
-                        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-			#!/bin/bash
-                        docker push ${DOCKER_IMAGE}:${env.BUILD_NUMBER}
-                        docker push ${DOCKER_IMAGE}:latest
-                        '''
+                        sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                     }
                 }
             }
         }
+
+    stage('Docker Push') {
+            steps {
+                script {
+                    
+                        sh '''
+                         docker push ${DOCKER_IMAGE}:V${env.BUILD_NUMBER}
+                         docker push ${DOCKER_IMAGE}:latest
+                         '''
+                        
+                    
+                }
+            }
+        }
+         
     }
     }
   
