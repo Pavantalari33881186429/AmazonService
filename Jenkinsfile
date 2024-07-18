@@ -102,10 +102,7 @@ pipeline{
             steps {
                 script {
                     
-                        sh '''
-                         docker push ${DOCKER_IMAGE}:V${env.BUILD_NUMBER}
-                         docker push ${DOCKER_IMAGE}:latest
-                         '''
+                        sh 'docker push ${DOCKER_IMAGE}:V${env.BUILD_NUMBER}'
                         
                     
                 }
