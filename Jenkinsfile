@@ -11,7 +11,7 @@ pipeline{
    environment {
         DOCKER_IMAGE = 'vayuputra123/amazonservice'
         DOCKER_CREDENTIALS_ID = 'DockerHubCreds'
-	BUILD_NUMBER = ${env.BUILD_NUMBER}
+	BUILD_NUMBER = "${env.BUILD_NUMBER}"
     }
   
   stages{
