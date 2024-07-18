@@ -44,6 +44,7 @@ pipeline{
                 script {
                     // Build Docker image
                     docker.build("${DOCKER_IMAGE}:V${env.BUILD_NUMBER}")
+	            docker.build("${DOCKER_IMAGE}:latest")
                 }
             }
         }
@@ -102,6 +103,19 @@ pipeline{
     stage('Docker Push') {
             steps {
                sh 'docker push $DOCKER_IMAGE:V$BUILD_NUMBER'
+	       sh 'docker push $DOCKER_IMAGE:latest'
+            }
+        }
+
+	  stage('Docker Cleanup') {
+            steps {
+                script {
+                    // Remove Docker image from local workspace
+                    sh '''
+                    docker rmi $DOCKER_IMAGE:$BUILD_NUMBER
+                    docker rmi $DOCKER_IMAGE:latest
+                    '''
+                }
             }
         }
          
