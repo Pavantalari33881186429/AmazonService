@@ -100,7 +100,7 @@ pipeline{
 
     stage('Docker Push') {
             steps {
-               sh 'docker push ${DOCKER_IMAGE}:V${env.BUILD_NUMBER}'
+               sh 'docker push $DOCKER_IMAGE:V$env.BUILD_NUMBER'
             }
         }
          
