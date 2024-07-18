@@ -11,6 +11,7 @@ pipeline{
    environment {
         DOCKER_IMAGE = 'vayuputra123/amazonservice'
         DOCKER_CREDENTIALS_ID = 'DockerHubCreds'
+	BUILD_NUMBER = ${env.BUILD_NUMBER}
     }
   
   stages{
@@ -100,7 +101,7 @@ pipeline{
 
     stage('Docker Push') {
             steps {
-               sh 'docker push $DOCKER_IMAGE:V${env.BUILD_NUMBER}'
+               sh 'docker push $DOCKER_IMAGE:V$BUILD_NUMBER'
             }
         }
          
