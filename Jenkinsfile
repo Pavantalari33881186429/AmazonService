@@ -112,7 +112,7 @@ pipeline{
                 script {
                     // Remove Docker image from local workspace
                     sh '''
-                    docker rmi $DOCKER_IMAGE:$BUILD_NUMBER
+                    docker rmi $DOCKER_IMAGE:V$BUILD_NUMBER
                     docker rmi $DOCKER_IMAGE:latest
                     '''
                 }
