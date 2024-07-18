@@ -93,7 +93,7 @@ pipeline{
                 script {
                     withCredentials([usernamePassword(credentialsId: "${DOCKER_CREDENTIALS_ID}", usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh '''
-                        echo $DOCKER_PASSWORD | docker login https://index.docker.io/v1/ -u $DOCKER_USERNAME --password-stdin
+                        echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
                         docker push ${DOCKER_IMAGE}:${env.BUILD_NUMBER}
                         docker push ${DOCKER_IMAGE}:latest
                         '''
